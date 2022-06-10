@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=block');
+        @import url('https://fonts.googleapis.com/css2?family=Hind:wght@500&display=swap');
+
+        body {
+            background-color: #14bdac;
+            font-family: 'Hind', sans-serif;
+        }
+
+        #top > div {
+            width: 100%;
+            justify-content: space-evenly;
+            margin-top: 4px;
+        }
+
+        #top {
+            background-color: white;
+            flex-direction: column;
+            color: #118075;
+            border-radius: 32px;
+            padding: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            width: 350px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .Turn {
+            color: #545454;
+            width: 25%;
+            margin-top: 0px;
+            border-radius: 8px;
+            border: 2px solid #ebebeb;
+        }
+
+        .border {
+            border-bottom: 2px solid #14bdac;
+        }
+
+        #title {
+            margin: 8px 4px;
+            font-size: 20px;
+            color: #545454;
+        }
+
+        table {
+            margin-top: 25px;
+        }
+
+        table{
+            border-collapse: collapse;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        td {
+            border-bottom: 8px solid #0da192;
+            border-right: 8px solid #0da192;
+            width: 100px;
+            height: 100px;
+            font-size: 66px;
+            text-align: center;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .X {
+            font-family: 'Permanent Marker', cursive;
+            color: #545454;
+        }
+
+        .O {
+            font-family: 'Permanent Marker', cursive;
+            color: #f2ebd3;
+        }
+
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        button {
+            background-color: white;
+            color: #118075;
+            width: 350px;
+            border: none;
+            border-radius: 32px;
+            padding: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* =================================== */
+        /* The Modal (background) */
+        .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 312px;
+        }
+
+        #result {
+            font-size: 50px;
+            color: #545454;
+            font-family: 'Permanent Marker';
+        }
+
+    </style>
+</head>
+<body>
+    <div id="top">
+        <div>
+            <div id="left-top" class="Turn">X</div>
+            <div id="right-top" class="Turn">O</div>
+        </div>
+        <p id="title">Start game</p> 
+    </div>
+    <table>
+        <tr>
+            <td id="11" onclick="mark('11')"></td>
+            <td id="12" onclick="mark('12')"></td>
+            <td id="13" onclick="mark('13')"></td>
+        </tr>
+        <tr>
+            <td id="21" onclick="mark('21')"></td>
+            <td id="22" onclick="mark('22')"></td>
+            <td id="23" onclick="mark('23')"></td>
+        </tr>
+        <tr>
+            <td id="31" onclick="mark('31')"></td>
+            <td id="32" onclick="mark('32')"></td>
+            <td id="33" onclick="mark('33')"></td>
+        </tr>
+    </table>
+    <div>
+        <button onclick="location.reload()">Reset</button>
+    </div>
+
+    <!-- =========================== -->
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <p id="result">DRAW!</p>
+        </div>
+    </div>
+
+    <script>
+
+        let player = 'X';
+        function mark(id) {
+            if (checkWinner('X') || checkWinner('O')) {
+                return;
+            }
+            let td = document.getElementById(id);
+            if (td.textContent !== '') {
+                return;
+            } 
+            td.textContent = player;
+            td.classList.add(player);
+            let XTurn = document.getElementById('left-top');
+            let OTurn = document.getElementById('right-top');
+            if (player === 'X') {
+                player = 'O';
+                OTurn.classList.add('border');
+                XTurn.classList.remove('border');
+            } else {
+                player = 'X';
+                XTurn.classList.add('border');
+                OTurn.classList.remove('border');
+            }
+            let topDiv = document.getElementById('title');
+            topDiv.textContent = player + ' Turn';
+            checkWinner('X');
+            checkWinner('O');
+            checkDraw();
+        }
+        
+        function checkWinner(symbol) {
+            if (
+                // Rows
+                (c(11) === c(12) && c(12)=== c(13) && c(13) === symbol) || 
+                (c(21) === c(22) && c(22)=== c(23) && c(23) === symbol) ||
+                (c(31) === c(32) && c(32)=== c(33) && c(33) === symbol) ||
+
+                // Column
+                (c(11) === c(21) && c(21)=== c(31) && c(31) === symbol) ||
+                (c(12) === c(22) && c(22)=== c(32) && c(32) === symbol) ||
+                (c(13) === c(23) && c(23)=== c(33) && c(33) === symbol) ||
+
+                // Diagonal
+                (c(11) === c(22) && c(22)=== c(33) && c(33) === symbol) ||
+                (c(13) === c(22) && c(22)=== c(31) && c(31) === symbol) 
+                ) {
+                modal.style.display = "block";
+                let result = document.getElementById("result");
+                result.textContent = symbol + ' is Winner!';
+                return true;
+            }
+            return false;
+        }
+
+        function checkDraw() {
+            let tds = document.querySelectorAll('td');
+            for (let i = 0; i < tds.length; i++) {
+                if (tds[i].textContent === '' ) {
+                    return
+                }
+            }
+            modal.style.display = "block";
+        }
+
+        function c(id){
+            return document.getElementById(id).textContent;
+        }
+
+        //=================================================
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            location.reload();
+        }
+        }
+   
+    </script>
+</body>
+</html>
